@@ -3,6 +3,8 @@ const cors = require('cors');
 const path = require('path');
 const db = require('./database/db');
 const breedsRouter = require('./routes/breeds');
+const adminRouter = require('./routes/admin');
+const crudRouter = require('./routes/crud');
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +21,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas API
 app.use('/api/breeds', breedsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/crud', crudRouter);
 
 // Ruta de prueba
 app.get('/api/test', (req, res) => {

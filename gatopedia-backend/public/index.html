@@ -145,5 +145,19 @@
     </footer>
 
     <script src="./js/script.js"></script>
+    <script>
+        // Verificar si el usuario es administrador
+        fetch('/api/admin/check')
+            .then(response => response.json())
+            .then(data => {
+                if (data.isAdmin) {
+                    const crudButton = document.createElement('button');
+                    crudButton.textContent = 'Administrar Base de Datos';
+                    crudButton.className = 'bg-red-600 text-white px-4 py-2 rounded-lg';
+                    crudButton.onclick = () => window.location.href = '/admin/crud';
+                    document.body.appendChild(crudButton);
+                }
+            });
+    </script>
 </body>
 </html>
