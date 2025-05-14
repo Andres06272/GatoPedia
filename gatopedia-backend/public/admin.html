@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="./css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <header class="bg-indigo-900 text-white py-4 shadow-lg">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Panel de Administración</h1>
+            <button id="logout-btn" class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Cerrar Sesión</button>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-indigo-900 mb-6 text-center">Gestión de Razas</h2>
+        <div id="admin-content" class="bg-white p-6 rounded-lg shadow-lg">
+            <!-- Aquí se cargarán las opciones CRUD dinámicamente -->
+        </div>
+    </main>
+    <footer class="bg-indigo-900 text-white py-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p class="text-indigo-200">© 2023 Gatopedia. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="./js/admin.js"></script>
+</body>
+</html>

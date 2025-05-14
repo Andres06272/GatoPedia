@@ -60,6 +60,20 @@
 .modal__content {
     transition: transform 0.3s ease;
     transform: translateY(-20px);
+    max-width: 800px; /* Ancho máximo del modal */
+    width: 90%; /* Ancho relativo para pantallas pequeñas */
+    max-height: 80vh; /* Altura máxima del modal */
+    overflow: hidden; /* Ocultar contenido que exceda el contenedor */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 0.75rem; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+    padding: 1.5rem; /* Espaciado interno */
+}
+
+.modal__body {
+    max-height: 70vh; /* Altura máxima del contenido del modal */
+    overflow-y: auto; /* Permitir scroll vertical */
+    padding-right: 1rem; /* Espacio para evitar que el scroll tape el contenido */
 }
 
 .modal.show {
@@ -69,6 +83,75 @@
 
 .modal.show .modal__content {
     transform: translateY(0);
+}
+
+/* Estilos para las secciones del modal */
+.modal__body h3 {
+    margin-bottom: 0.5rem;
+    color: #4c51bf; /* Indigo */
+}
+
+.modal__body p, .modal__body ul {
+    margin-bottom: 1rem;
+    color: #4a5568; /* Gray */
+}
+
+.modal__body ul {
+    padding-left: 1.5rem;
+}
+
+/* Estilos para tablas en el panel de administración */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    border: 1px solid #e5e7eb; /* Gris claro */
+    padding: 0.75rem;
+    text-align: left;
+}
+
+th {
+    background-color: #f3f4f6; /* Gris claro */
+    font-weight: bold;
+    color: #374151; /* Gris oscuro */
+}
+
+td {
+    background-color: #ffffff; /* Blanco */
+}
+
+tr:nth-child(even) td {
+    background-color: #f9fafb; /* Gris muy claro */
+}
+
+/* Botones en el panel de administración */
+button {
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Hacer que el footer se mantenga abajo */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Ocupa el espacio disponible entre el header y el footer */
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
 /* Responsive */

@@ -5,6 +5,7 @@ const db = require('./database/db');
 const breedsRouter = require('./routes/breeds');
 const adminRouter = require('./routes/admin');
 const crudRouter = require('./routes/crud');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const PORT = 3000;
@@ -16,6 +17,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -27,6 +29,11 @@ app.use('/api/crud', crudRouter);
 // Ruta de prueba
 app.get('/api/test', (req, res) => {
   res.json({ status: 'API working', timestamp: new Date() });
+});
+
+// Ruta para servir la página de administración
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 // Manejo de errores

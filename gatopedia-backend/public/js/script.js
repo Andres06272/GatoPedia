@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Hacer función global para mostrar detalles
+    // Mostrar detalles completos de una raza
     window.showBreedDetail = async function(breedId) {
         try {
             const response = await fetch(`${API_BASE_URL}/api/breeds/${breedId}`);
@@ -144,29 +144,56 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <h3 class="text-xl font-semibold text-indigo-800 mb-2">Características</h3>
                                 <p>${breed.characteristics}</p>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h4 class="font-semibold text-indigo-800">Vida promedio</h4>
-                                    <p>${breed.lifespan}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-indigo-800">Peso</h4>
-                                    <p>${breed.weight}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-indigo-800">Origen</h4>
-                                    <p>${breed.origin}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-indigo-800">Colores</h4>
-                                    <p>${breed.colors.join(', ')}</p>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-indigo-800">Patrones</h4>
-                                    <p>${breed.patterns.join(', ')}</p>
-                                </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Vida promedio</h4>
+                                <p>${breed.lifespan}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Peso</h4>
+                                <p>${breed.weight}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Origen</h4>
+                                <p>${breed.origin}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Colores</h4>
+                                <p>${breed.colors.join(', ')}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Patrones</h4>
+                                <p>${breed.patterns.join(', ')}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-indigo-800">Etiquetas</h4>
+                                <p>${breed.tags.join(', ')}</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Comportamiento y Personalidad</h3>
+                    <p>El ${breed.name} es conocido por ser ${breed.tags.includes('activo') ? 'activo y juguetón' : 'tranquilo y relajado'}. Es una raza que ${breed.tags.includes('vocal') ? 'suele ser muy vocal y comunicativa' : 'es más reservada y silenciosa'}.</p>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Recomendaciones de Alimentación</h3>
+                    <p>El gato ${breed.name} es un animal carnívoro. Se recomienda alimentarlo con comida seca de alta calidad y evitar alimentos crudos. Asegúrate de que siempre tenga agua fresca disponible.</p>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Cuidados y Aseo</h3>
+                    <p>Para mantener el pelaje de un ${breed.name} saludable, cepíllalo regularmente y utiliza arena de calidad para su higiene. También es importante realizar visitas regulares al veterinario.</p>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Enfermedades Comunes</h3>
+                    <ul class="list-disc list-inside">
+                        <li>Problemas dentales: Mantén una buena higiene dental.</li>
+                        <li>Obesidad: Controla su dieta y fomenta el ejercicio.</li>
+                        <li>Enfermedades genéticas: Consulta al veterinario regularmente.</li>
+                    </ul>
+                </div>
+                <div class="mt-6">
+                    <div class="flex justify-center">
+                        <img src="./img/publicidad.jpg" alt="Publicidad" class="rounded-lg shadow-md">
                     </div>
                 </div>
             `;

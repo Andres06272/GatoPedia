@@ -84,12 +84,17 @@ router.get('/:id', (req, res) => {
         `SELECT type, value FROM attributes WHERE breed_id = ?`,
         [id],
         (err, attributes) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+
           const result = {
             ...breed,
             colors: attributes.filter(a => a.type === 'color').map(a => a.value),
             patterns: attributes.filter(a => a.type === 'pattern').map(a => a.value),
             tags: attributes.filter(a => a.type === 'tag').map(a => a.value)
           };
+
           res.json(result);
         }
       );
