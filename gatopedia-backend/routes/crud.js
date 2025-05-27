@@ -19,7 +19,7 @@ router.get('/breeds/:id', isAdmin, (req, res) => {
             }
 
             db.all(
-                `SELECT type, value FROM attributes WHERE breed_id = ?`,
+                `SELECT type, value, label FROM attributes WHERE breed_id = ?`,
                 [id],
                 (err, attributes) => {
                     if (err) {
@@ -29,7 +29,13 @@ router.get('/breeds/:id', isAdmin, (req, res) => {
                         ...breed,
                         colors: attributes.filter(a => a.type === 'color').map(a => a.value),
                         patterns: attributes.filter(a => a.type === 'pattern').map(a => a.value),
-                        tags: attributes.filter(a => a.type === 'tag').map(a => a.value)
+                        tags: attributes.filter(a => a.type === 'tag').map(a => a.value),
+                        links: attributes
+                            .filter(a => a.type === 'link')
+                            .map(a => ({
+                                url: a.value,
+                                label: a.label || a.value
+                            }))
                     };
                     res.json(result);
                 }
@@ -38,13 +44,33 @@ router.get('/breeds/:id', isAdmin, (req, res) => {
     );
 });
 
-// Obtener todas las razas
+// Obtener todas las razas (con links básicos)
 router.get('/breeds', isAdmin, (req, res) => {
     db.all(`SELECT * FROM breeds`, [], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        res.json(rows);
+        // Para cada raza, obtener links asociados
+        const breedIds = rows.map(r => r.id);
+        if (breedIds.length === 0) return res.json(rows);
+
+        db.all(
+            `SELECT breed_id, value, label FROM attributes WHERE type = 'link' AND breed_id IN (${breedIds.map(() => '?').join(',')})`,
+            breedIds,
+            (err, links) => {
+                if (err) return res.status(500).json({ error: err.message });
+                const linksByBreed = {};
+                links.forEach(l => {
+                    if (!linksByBreed[l.breed_id]) linksByBreed[l.breed_id] = [];
+                    linksByBreed[l.breed_id].push({ url: l.value, label: l.label || l.value });
+                });
+                const result = rows.map(breed => ({
+                    ...breed,
+                    links: linksByBreed[breed.id] || []
+                }));
+                res.json(result);
+            }
+        );
     });
 });
 
@@ -54,7 +80,7 @@ router.post('/breeds', isAdmin, (req, res) => {
     const errors = [];
 
     breeds.forEach((breed, index) => {
-        const { name, lifespan, characteristics, origin, weight, image, attributes } = breed;
+        const { name, lifespan, characteristics, origin, weight, image, attributes, links } = breed;
 
         // Validar campos obligatorios
         if (!name || !lifespan || !characteristics || !origin || !weight || !image) {
@@ -77,8 +103,17 @@ router.post('/breeds', isAdmin, (req, res) => {
                 if (attributes && attributes.length > 0) {
                     attributes.forEach(attr => {
                         db.run(
-                            `INSERT INTO attributes (breed_id, type, value) VALUES (?, ?, ?)`,
-                            [breedId, attr.type, attr.value]
+                            `INSERT INTO attributes (breed_id, type, value, label) VALUES (?, ?, ?, ?)`,
+                            [breedId, attr.type, attr.value, attr.label || null]
+                        );
+                    });
+                }
+                // Insertar links si vienen en el body
+                if (links && links.length > 0) {
+                    links.forEach(link => {
+                        db.run(
+                            `INSERT INTO attributes (breed_id, type, value, label) VALUES (?, 'link', ?, ?)`,
+                            [breedId, link.url, link.label || null]
                         );
                     });
                 }
@@ -96,7 +131,7 @@ router.post('/breeds', isAdmin, (req, res) => {
 // Actualizar una raza
 router.put('/breeds/:id', isAdmin, (req, res) => {
     const { id } = req.params;
-    const { name, lifespan, characteristics, origin, weight, image, attributes } = req.body;
+    const { name, lifespan, characteristics, origin, weight, image, attributes, links } = req.body;
 
     db.run(
         `UPDATE breeds SET name = ?, lifespan = ?, characteristics = ?, origin = ?, weight = ?, image = ? WHERE id = ?`,
@@ -112,8 +147,17 @@ router.put('/breeds/:id', isAdmin, (req, res) => {
                 if (attributes && attributes.length > 0) {
                     attributes.forEach(attr => {
                         db.run(
-                            `INSERT INTO attributes (breed_id, type, value) VALUES (?, ?, ?)`,
-                            [id, attr.type, attr.value]
+                            `INSERT INTO attributes (breed_id, type, value, label) VALUES (?, ?, ?, ?)`,
+                            [id, attr.type, attr.value, attr.label || null]
+                        );
+                    });
+                }
+                // Insertar links si vienen en el body
+                if (links && links.length > 0) {
+                    links.forEach(link => {
+                        db.run(
+                            `INSERT INTO attributes (breed_id, type, value, label) VALUES (?, 'link', ?, ?)`,
+                            [id, link.url, link.label || null]
                         );
                     });
                 }
