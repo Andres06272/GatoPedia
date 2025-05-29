@@ -92,7 +92,13 @@ router.get('/:id', (req, res) => {
             ...breed,
             colors: attributes.filter(a => a.type === 'color').map(a => a.value),
             patterns: attributes.filter(a => a.type === 'pattern').map(a => a.value),
-            tags: attributes.filter(a => a.type === 'tag').map(a => a.value)
+            tags: attributes.filter(a => a.type === 'tag').map(a => a.value),
+            links: attributes
+              .filter(a => a.type === 'link')
+              .map(a => ({
+                url: a.value,
+                label: a.label || a.value
+              }))
           };
 
           res.json(result);

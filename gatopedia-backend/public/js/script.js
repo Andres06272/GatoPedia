@@ -131,7 +131,123 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Error al cargar los detalles');
             
             const breed = await response.json();
-            
+
+            function getLinks(breed) {
+                const name = breed.name.toLowerCase().replace(/ /g, "-");
+                return [
+                    { label: "Videos en YouTube", url: `https://www.youtube.com/results?search_query=gato+${encodeURIComponent(breed.name)}` },
+                    { label: "Hill's Pet", url: `https://www.hillspet.es/cat-care/cat-breeds/${name}` },
+                    { label: "Purina", url: `https://www.purina.es/encuentra-mascota/razas-de-gato/${name}` },
+                    { label: "TiendaAnimal", url: `https://www.tiendanimal.es/articulos/${name}-caracteristicas-cuidados-y-curiosidades/` },
+                    { label: "Royal Canin", url: `https://www.royalcanin.com/es/cats/breeds/${name}` }
+                ];
+            }
+            const links = getLinks(breed);
+
+            function link(label) {
+                const l = links.find(l => l.label.toLowerCase().includes(label.toLowerCase()));
+                return l ? `<a href="${l.url}" target="_blank" class="text-indigo-600 underline hover:text-indigo-800">${l.label}</a>` : '';
+            }
+
+            function extraInfo(breed) {
+                if (breed.name === "Británico de Pelo Corto") {
+                    return `
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Historia Real Británica</h3>
+                        <p>
+                            Originalmente criados como gatos de trabajo en Gran Bretaña, se hicieron populares durante la era victoriana.
+                            Sobrevivieron a las guerras mundiales y ayudaron a proteger las reservas de alimentos de los roedores.
+                            Más historia en ${link('Hill\'s Pet')}.
+                        </p>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Características Distintivas</h3>
+                        <ul class="list-disc list-inside mb-2">
+                            <li>Cara redonda con mejillas prominentes ("cara de osito").</li>
+                            <li>Constitución robusta y compacta.</li>
+                            <li>Pelaje denso y suave como el terciopelo.</li>
+                            <li>Famosos por su "sonrisa británica".</li>
+                        </ul>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Temperamento Único</h3>
+                        <p>
+                            Conocidos como los "caballeros británicos" por su comportamiento digno y reservado.
+                            Independientes pero afectuosos, prefieren estar cerca pero no encima de sus dueños.
+                            Más sobre su personalidad en ${link('Purina')}.
+                        </p>
+                    `;
+                }
+                
+                if (breed.name === "Bosque de Noruega") {
+                    return `
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Legado Vikingo</h3>
+                        <p>
+                            Descendientes de los gatos que viajaban en los barcos vikingos, evolucionaron para sobrevivir
+                            en el duro clima nórdico. Son considerados tesoros nacionales en Noruega.
+                            Más sobre su herencia en ${link('Royal Canin')}.
+                        </p>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Adaptaciones al Frío</h3>
+                        <ul class="list-disc list-inside mb-2">
+                            <li>Doble capa de pelo resistente al agua y al frío.</li>
+                            <li>Patas grandes con pelo entre los dedos para caminar en la nieve.</li>
+                            <li>Cola larga y espesa para envolverse al dormir.</li>
+                        </ul>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Habilidades Únicas</h3>
+                        <p>
+                            Excelentes trepadores gracias a sus garras fuertes y patas musculosas.
+                            Capaces de escalar rocas verticales y árboles altos con facilidad.
+                        </p>
+                    `;
+                }
+
+                if (breed.name === "Sagrado de Birmania") {
+                    return `
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Leyenda del Templo</h3>
+                        <p>
+                            Según la leyenda, estos gatos eran guardianes de los templos budistas en Birmania.
+                            Se dice que obtuvieron sus puntos dorados y ojos azules por la bendición de una diosa.
+                            Detalles en ${link('Hill\'s Pet')}.
+                        </p>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Marcas Sagradas</h3>
+                        <ul class="list-disc list-inside mb-2">
+                            <li>"Guantes" blancos en las patas (característica única de la raza).</li>
+                            <li>Máscara facial oscura con ojos zafiro.</li>
+                            <li>Pelaje sedoso que raramente se enreda.</li>
+                        </ul>
+                        <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Personalidad Mística</h3>
+                        <p>
+                            Conocidos por su naturaleza gentil y meditativa.
+                            Desarrollan fuertes vínculos emocionales con sus familias.
+                            Ver más en ${link('YouTube')}.
+                        </p>
+                    `;
+                }
+
+                // ... Add more breeds with specific information ...
+
+                // Generic fallback for other breeds
+                return `
+                    <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Historia y Origen</h3>
+                    <p>
+                        El ${breed.name} es una raza apreciada tanto por su aspecto como por su personalidad. 
+                        Su origen y evolución han sido influenciados por la selección natural y la crianza selectiva.
+                        Más información en ${link('TiendaAnimal')} y ${link('Hill\'s Pet')}.
+                    </p>
+                    <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Personalidad y Comportamiento</h3>
+                    <p>
+                        Esta raza suele ser ${breed.tags && breed.tags.length ? breed.tags.join(', ') : 'versátil y adaptable'}.
+                        Se adapta bien a la vida en familia y puede convivir con otros animales si se socializa desde pequeño.
+                        Descubre videos y experiencias en ${link('YouTube')} y consejos en ${link('Hill\'s Pet')}.
+                    </p>
+                    <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Cuidados y Salud</h3>
+                    <ul class="list-disc list-inside mb-2">
+                        <li>Requiere cuidados básicos de higiene, alimentación balanceada y visitas regulares al veterinario.</li>
+                        <li>Consulta recomendaciones específicas en ${link('Purina')} y ${link('TiendaAnimal')}.</li>
+                    </ul>
+                    <h3 class="text-xl font-bold text-indigo-900 mt-6 mb-2">Curiosidades y Recomendaciones</h3>
+                    <ul class="list-disc list-inside mb-2">
+                        <li>Algunas líneas de esta raza han participado en exposiciones felinas internacionales.</li>
+                        <li>Para más información y recursos, visita ${link('Royal Canin')} y ${link('YouTube')}.</li>
+                    </ul>
+                `;
+            }
+
             document.querySelector('.modal__body').innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -158,43 +274,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <div>
                                 <h4 class="font-semibold text-indigo-800">Colores</h4>
-                                <p>${breed.colors.join(', ')}</p>
+                                <p>${breed.colors && breed.colors.length ? breed.colors.join(', ') : 'N/A'}</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-indigo-800">Patrones</h4>
-                                <p>${breed.patterns.join(', ')}</p>
+                                <p>${breed.patterns && breed.patterns.length ? breed.patterns.join(', ') : 'N/A'}</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-indigo-800">Etiquetas</h4>
-                                <p>${breed.tags.join(', ')}</p>
+                                <p>${breed.tags && breed.tags.length ? breed.tags.join(', ') : 'N/A'}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mt-6">
-                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Comportamiento y Personalidad</h3>
-                    <p>El ${breed.name} es conocido por ser ${breed.tags.includes('activo') ? 'activo y juguetón' : 'tranquilo y relajado'}. Es una raza que ${breed.tags.includes('vocal') ? 'suele ser muy vocal y comunicativa' : 'es más reservada y silenciosa'}.</p>
-                </div>
-                <div class="mt-6">
-                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Recomendaciones de Alimentación</h3>
-                    <p>El gato ${breed.name} es un animal carnívoro. Se recomienda alimentarlo con comida seca de alta calidad y evitar alimentos crudos. Asegúrate de que siempre tenga agua fresca disponible.</p>
-                </div>
-                <div class="mt-6">
-                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Cuidados y Aseo</h3>
-                    <p>Para mantener el pelaje de un ${breed.name} saludable, cepíllalo regularmente y utiliza arena de calidad para su higiene. También es importante realizar visitas regulares al veterinario.</p>
-                </div>
-                <div class="mt-6">
-                    <h3 class="text-2xl font-bold text-indigo-900 mb-4">Enfermedades Comunes</h3>
-                    <ul class="list-disc list-inside">
-                        <li>Problemas dentales: Mantén una buena higiene dental.</li>
-                        <li>Obesidad: Controla su dieta y fomenta el ejercicio.</li>
-                        <li>Enfermedades genéticas: Consulta al veterinario regularmente.</li>
-                    </ul>
-                </div>
-                <div class="mt-6">
-                    <div class="flex justify-center">
-                        <img src="./img/publicidad.jpg" alt="Publicidad" class="rounded-lg shadow-md">
-                    </div>
+                    ${extraInfo(breed)}
                 </div>
             `;
             
